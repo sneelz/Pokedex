@@ -1,0 +1,18 @@
+<nav class="navbar navbar-expand-lg navbar-dark pkdx-nav">
+	<a class="navbar-brand" href="{{url_for('showPokemon')}}"><img src="/static/pkdx-nav-buttons.svg" class="pkdx-nav-buttons"></a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#pkdxNavbar" aria-controls="pkdxNavbar" aria-expanded="false" aria-label="Toggle navigation">
+	  <span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="pkdxNavbar">
+	  <div class="navbar-nav ml-auto">
+			<a class="nav-item nav-link" href="{{url_for('showPokemon')}}">
+				Home
+			</a>
+			{%if 'username' not in session %}
+				<a class="nav-item nav-link" href="{{url_for('showLogin')}}">Login</a>
+			{% else %}
+				<a class="nav-item nav-link" href="{{url_for('disconnect')}}">Logout</a>
+			{% endif %}
+	  </div>
+	</div>
+  </nav>

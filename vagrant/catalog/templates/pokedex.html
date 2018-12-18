@@ -1,0 +1,55 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div class="row">
+	<div class="col-md-6">
+		<h1>Pokedex</h1>
+	</div>
+	<div class="col-md-6 pkdx-btn-group-right">
+		<a href="{{url_for('newPokemon')}}">
+			<button class="btn btn-primary btn-lg pkdx-add-btn">
+				+ Add New Pokemon
+			</button>
+		</a>
+	</div>
+</div>
+
+<div class="row">
+	{% for pokemon in pokemons %}
+	<div class="col-lg-4 col-md-6">
+		<div class="card pkdx-card pkdx-pokemon-card">
+			<a href="{{url_for('showSpotted', pokemon_id = pokemon.id)}}">
+				<div class="card-body">
+					<div class="row">
+						<div class="col-md-4">
+							{% if pokemon.picture %}
+								<div class="pkdx-image">
+									<img src="/static/{{pokemon.picture}}"/>
+								</div>
+							{% else %}
+								<div class="pkdx-image">
+									<img src="/static/no-image.png"/>
+								</div>
+							{% endif %}
+						</div>
+						<div class="col-md-8">
+							{% if (pokemon.number|string)|length == 1 %}
+								<p class="pkdx-pokemon-number">00{{pokemon.number}}</p>
+							{% elif (pokemon.number|string)|length == 2 %}
+								<p class="pkdx-pokemon-number">0{{pokemon.number}}</p>
+							{% else %}
+								<p class="pkdx-pokemon-number">{{pokemon.number}}</p>
+							{% endif %}
+							<h4 class="pkdx-heading">
+								{{pokemon.name}}
+							</h4>
+						</div>
+					</div>
+				</div>
+			</a>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+
+{% endblock %}

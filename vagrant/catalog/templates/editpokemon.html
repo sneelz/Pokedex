@@ -1,0 +1,71 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div class="row">
+	<div class="col-md-6 offset-md-3">
+		<h1>Edit {{pokemon.name}}</h1>
+		<form action="#" enctype=multipart/form-data method="POST">
+			<div class="form-group">
+				<label for="name">Pokemon Name <span class="pkdx-required">*</span></label>
+				<input type ="text" class="form-control" name="name" value="{{pokemon.name}}" required>
+
+				<label for="number">Pokemon Number <span class="pkdx-required">*</span></label>
+				<input type ="number" class="form-control" name="number" min="1" max="999" value="{{pokemon.number}}" required>
+
+				<label for="file">Picture</label>
+				<input type="file" name="file" class="form-control">
+
+				<label for="type1">Type 1 <span class="pkdx-required">*</span></label>
+				<select name="type1" class="form-control" required>
+					<option value="bug" {% if pokemon.type1 == 'bug' %} selected {% endif %}>Bug</option> 
+					<option value="dragon" {% if pokemon.type1 == 'dragon' %} selected {% endif %}>Dragon</option> 
+					<option value="ice" {% if pokemon.type1 == 'ice' %} selected {% endif %}>Ice</option> 
+					<option value="fighting" {% if pokemon.type1 == 'fighting' %} selected {% endif %}>Fighting</option> 
+					<option value="fire" {% if pokemon.type1 == 'fire' %} selected {% endif %}>Fire</option> 
+					<option value="flying" {% if pokemon.type1 == 'flying' %} selected {% endif %}>Flying</option> 
+					<option value="grass" {% if pokemon.type1 == 'grass' %} selected {% endif %}>Grass</option>
+					<option value="ghost" {% if pokemon.type1 == 'ghost' %} selected {% endif %}>Ghost</option> 
+					<option value="ground" {% if pokemon.type1 == 'ground' %} selected {% endif %}>Ground</option> 
+					<option value="electric" {% if pokemon.type1 == 'electric' %} selected {% endif %}>Electric</option> 
+					<option value="normal" {% if pokemon.type1 == 'normal' %} selected {% endif %}>Normal</option>
+					<option value="poison" {% if pokemon.type1 == 'poison' %} selected {% endif %}>Poison</option> 
+					<option value="psychic" {% if pokemon.type1 == 'psychic' %} selected {% endif %}>Psychic</option> 
+					<option value="rock" {% if pokemon.type1 == 'rock' %} selected {% endif %}>Rock</option> 
+					<option value="water" {% if pokemon.type1 == 'water' %} selected {% endif %}>Water</option> 
+				</select>
+				
+				<label for="type2">Type 2</label>
+				<select name="type2" class="form-control">
+					<option value="" {% if pokemon.type2 == '' %} selected {% endif %}></option>
+					<option value="bug" {% if pokemon.type2 == 'bug' %} selected {% endif %}>Bug</option> 
+					<option value="dragon" {% if pokemon.type2 == 'dragon' %} selected {% endif %}>Dragon</option> 
+					<option value="ice" {% if pokemon.type2 == 'ice' %} selected {% endif %}>Ice</option> 
+					<option value="fighting" {% if pokemon.type2 == 'fighting' %} selected {% endif %}>Fighting</option> 
+					<option value="fire" {% if pokemon.type2 == 'fire' %} selected {% endif %}>Fire</option> 
+					<option value="flying" {% if pokemon.type2 == 'flying' %} selected {% endif %}>Flying</option> 
+					<option value="grass" {% if pokemon.type2 == 'grass' %} selected {% endif %}>Grass</option>
+					<option value="ghost" {% if pokemon.type2 == 'ghost' %} selected {% endif %}>Ghost</option> 
+					<option value="ground" {% if pokemon.type2 == 'ground' %} selected {% endif %}>Ground</option> 
+					<option value="electric" {% if pokemon.type2 == 'electric' %} selected {% endif %}>Electric</option> 
+					<option value="normal" {% if pokemon.type2 == 'normal' %} selected {% endif %}>Normal</option>
+					<option value="poison" {% if pokemon.type2 == 'poison' %} selected {% endif %}>Poison</option> 
+					<option value="psychic" {% if pokemon.type2 == 'psychic' %} selected {% endif %}>Psychic</option> 
+					<option value="rock" {% if pokemon.type2 == 'rock' %} selected {% endif %}>Rock</option> 
+					<option value="water" {% if pokemon.type2 == 'water' %} selected {% endif %}>Water</option> 
+				</select>
+
+				<label for="description">Description</label>
+				<textarea name="description" class="form-control">{{pokemon.description}}</textarea>
+				
+				<button type="submit" class="btn btn-primary btn-lg" id="submit">
+					Save
+				</button>
+				<a href="{{url_for('showSpotted', pokemon_id = pokemon.id )}}" class="btn btn-link btn-lg">
+					Cancel
+				</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+{% endblock %}

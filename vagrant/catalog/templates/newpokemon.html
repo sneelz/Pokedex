@@ -1,0 +1,72 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div class="row">
+	<div class="col-md-6 offset-md-3">
+		<h1>Add New Pokemon</h1>
+		<form action="#" enctype=multipart/form-data method="POST">
+			<div class="form-group">
+				<label for="name">Pokemon Name <span class="pkdx-required">*</span></label>
+				<input type ="text" class="form-control" maxlength="100" name="name" required>
+
+				<label for="number">Pokemon Number <span class="pkdx-required">*</span></label>
+				<input type ="number" class="form-control" name="number" min="1" max="999" required>
+
+				<label for="file">Picture</label>
+				<input type="file" name="file" class="form-control">
+				
+				<label for="type1">Type 1 <span class="pkdx-required">*</span></label>
+				<select name="type1" class="form-control" required>
+					<option value=""></option>
+					<option value="bug">Bug</option>
+					<option value="dragon">Dragon</option>
+					<option value="ice">Ice</option>
+					<option value="fighting">Fighting</option>
+					<option value="fire">Fire</option>
+					<option value="flying">Flying</option>
+					<option value="grass">Grass</option>
+					<option value="ghost">Ghost</option>
+					<option value="ground">Ground</option>
+					<option value="electric">Electric</option>
+					<option value="normal">Normal</option>
+					<option value="poison">Poison</option>
+					<option value="psychic">Psychic</option>
+					<option value="rock">Rock</option>
+					<option value="water">Water</option>
+				</select>
+				
+				<label for="type2">Type 2</label>
+				<select name="type2" class="form-control">
+					<option value=""></option>
+					<option value="bug">Bug</option>
+					<option value="dragon">Dragon</option>
+					<option value="ice">Ice</option>
+					<option value="fighting">Fighting</option>
+					<option value="fire">Fire</option>
+					<option value="flying">Flying</option>
+					<option value="grass">Grass</option>
+					<option value="ghost">Ghost</option>
+					<option value="ground">Ground</option>
+					<option value="electric">Electric</option>
+					<option value="normal">Normal</option>
+					<option value="poison">Poison</option>
+					<option value="psychic">Psychic</option>
+					<option value="rock">Rock</option>
+					<option value="water">Water</option>
+				</select>
+
+				<label for="description">Description</label>
+				<textarea name="description" class="form-control"></textarea>
+				
+				<button type="submit" class="btn btn-primary btn-lg" id="submit">
+					Create
+				</button>
+				<a href="{{url_for('showPokemon')}}" class="btn btn-link btn-lg">
+					Cancel
+				</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+{% endblock %}

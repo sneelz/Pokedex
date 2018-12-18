@@ -1,0 +1,31 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div class="row">
+	<div class="col-md-6 offset-md-3">
+		<h1>New Location</h1>
+		<p>Where you spotted the pokemon.</p>
+		<form action="#" method="POST">
+			<div class="form-group">
+				<label for="location">Location <span class="pkdx-required">*</span></label>
+				<input type ="text" maxlength="50" class="form-control" name="location" required>
+				
+				<label for="date">Date <span class="pkdx-required">*</span></label>
+				<input type="date"class="form-control" name="date" required>
+
+				<label for="notes">Notes</label>
+				<textarea class="form-control" maxlength="250" rows="3" name="notes"></textarea>
+
+				<button type="submit" class="btn btn-primary btn-lg" id="submit">
+					Create
+				</button>
+				<a href="{{url_for('showSpotted', pokemon_id = pokemon_id)}}" class="btn btn-link btn-lg">
+					Cancel
+				</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+{% endblock %}
+

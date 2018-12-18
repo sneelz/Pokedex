@@ -1,0 +1,112 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div class="row">
+	<div class="col-md-3">
+		{% if pokemon.picture %}
+			<div class="pkdx-image pkdx-pokemon-image">
+				<img src="/static/{{pokemon.picture}}"/>
+			</div>
+		{% else %}
+			<div class="pkdx-image pkdx-pokemon-image">
+				<img src="/static/no-image.png"/>
+			</div>
+		{% endif %}
+	</div>
+	<div class="col-md-9">
+		<div class="row">
+			<div class="col-md-4">
+				<h1 class="pkdx-heading">{{pokemon.name}}</h1>
+				<h5>
+					<div class="badge 
+						{% if pokemon.type1 == 'bug' %} pkdx-bug-tag {% endif %}
+						{% if pokemon.type1 == 'dragon' %} pkdx-dragon-tag {% endif %}
+						{% if pokemon.type1 == 'ice' %} pkdx-ice-tag {% endif %}
+						{% if pokemon.type1 == 'fighting' %} pkdx-fighting-tag {% endif %}
+						{% if pokemon.type1 == 'fire' %} pkdx-fire-tag {% endif %}
+						{% if pokemon.type1 == 'flying' %} pkdx-flying-tag {% endif %}
+						{% if pokemon.type1 == 'grass' %} pkdx-grass-tag {% endif %}
+						{% if pokemon.type1 == 'ghost' %} pkdx-ghost-tag {% endif %}
+						{% if pokemon.type1 == 'ground' %} pkdx-ground-tag {% endif %}
+						{% if pokemon.type1 == 'electric' %} pkdx-electric-tag {% endif %}
+						{% if pokemon.type1 == 'normal' %} pkdx-normal-tag {% endif %}
+						{% if pokemon.type1 == 'poison' %} pkdx-poison-tag {% endif %}
+						{% if pokemon.type1 == 'psychic' %} pkdx-psychic-tag {% endif %}
+						{% if pokemon.type1 == 'rock' %} pkdx-rock-tag {% endif %}
+						{% if pokemon.type1 == 'water' %} pkdx-water-tag {% endif %}">
+						{{pokemon.type1}}
+					</div>
+					{% if pokemon.type2 %}
+						<div class="badge 
+							{% if pokemon.type2 == 'bug' %} pkdx-bug-tag {% endif %}
+							{% if pokemon.type2 == 'dragon' %} pkdx-dragon-tag {% endif %}
+							{% if pokemon.type2 == 'ice' %} pkdx-ice-tag {% endif %}
+							{% if pokemon.type2 == 'fighting' %} pkdx-fighting-tag {% endif %}
+							{% if pokemon.type2 == 'fire' %} pkdx-fire-tag {% endif %}
+							{% if pokemon.type2 == 'flying' %} pkdx-flying-tag {% endif %}
+							{% if pokemon.type2 == 'grass' %} pkdx-grass-tag {% endif %}
+							{% if pokemon.type2 == 'ghost' %} pkdx-ghost-tag {% endif %}
+							{% if pokemon.type2 == 'ground' %} pkdx-ground-tag {% endif %}
+							{% if pokemon.type2 == 'electric' %} pkdx-electric-tag {% endif %}
+							{% if pokemon.type2 == 'normal' %} pkdx-normal-tag {% endif %}
+							{% if pokemon.type2 == 'poison' %} pkdx-poison-tag {% endif %}
+							{% if pokemon.type2 == 'psychic' %} pkdx-psychic-tag {% endif %}
+							{% if pokemon.type2 == 'rock' %} pkdx-rock-tag {% endif %}
+							{% if pokemon.type2 == 'water' %} pkdx-water-tag {% endif %}">
+							{{pokemon.type2}}
+						</div>
+					{% endif %}
+				</h5>
+			</div>
+			<div class="col-md-8 text-right">
+                <p><em>Added by {{creator.name}}</em></p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<p>{{pokemon.description}}</p>
+
+				<a href="{{url_for('showPokemon')}}">
+					⭠ Back to Pokedex
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row mt-4">
+	<div class="col-md-6">
+		<h3 class="mb-4">Spotted Locations</h3>
+	</div>
+	<div class="col-md-6">
+	</div>
+</div>
+
+<div class="row">
+	<div class="col">
+		{% if spotted !=[] %}	
+			{% for spot in spotted %}
+				<div class="card pkdx-card pkdx-spotted-card">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-6">
+								<h4>{{spot.location}}</h4>
+								{% if spot.notes %}
+									<p>{{spot.date}} - {{spot.notes}}</p>
+								{% else %}
+									<p>{{spot.date}}</p>
+								{% endif %}
+							</div>
+							<div class="col-md-6">
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		{% else %}
+			<p>No spotted locations for this pokemon yet.</p>
+		{% endif %}
+	</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div class="row">
+	<div class="col-md-6 offset-md-3">
+		<h4>Are you sure you want to delete {{pokemon.name}}?</h4>
+		<br/>
+		<div class="btn-group">
+			<form action="#" method="POST">
+				<button type="submit" class="btn btn-primary btn-lg" id="submit" type="submit">
+					Delete
+				</button>
+			</form>
+
+			<a href="{{url_for('showSpotted', pokemon_id = pokemon.id )}}" class="btn btn-link btn-lg">
+				Cancel
+			</a>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "main.html" %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h1>Edit Location</h1>
+        <form action="#" method="POST">
+            <div class="form-group">
+                <label for="location">Location <span class="pkdx-required">*</span></label>
+                <input type ="text" maxlength="50" class="form-control" name="location" value="{{spot.location}}">
+                
+                <label for="date">Date <span class="pkdx-required">*</span></label>
+                <input type="date" class="form-control" name="date" value="{{spot.date}}">
+
+                <label for="notes">Notes</label>
+                <textarea class="form-control" maxlength="250" rows="3" name="notes">{{spot.notes}}</textarea>
+
+                <button type="submit" class="btn btn-primary btn-lg" id="submit">
+                    Save Changes
+                </button>
+                <a href="{{url_for('showSpotted', pokemon_id = pokemon_id)}}" class="btn btn-link btn-lg">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
