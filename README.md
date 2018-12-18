@@ -30,19 +30,19 @@ The user can also view, create, update, and delete spotted locations for each ad
 ## Code Design
 
 URLs:
-/login/ - Login via Google
-/pokedex/ - Lists all pokemon in pokedex
-/pokedex/1/ - Lists details + spotted locations of a single pokemon ID
-/pokedex/new/ - Add a new pokemon
-/pokedex/1/edit - Edit a pokemon
-/pokedex/1/delete - Delete a pokemon
-/pokedex/1/location/new/ - Add a new spotted location for a pokemon
-/pokedex/1/location/1/edit - Edit a spotted location for a pokemon
-/pokedex/1/location/1/delete - Delete a spotted location for a pokemon
+* /login/ - Login via Google
+* /pokedex/ - Lists all pokemon in pokedex
+* /pokedex/1/ - Lists details + spotted locations of a single pokemon ID
+* /pokedex/new/ - Add a new pokemon
+* /pokedex/1/edit - Edit a pokemon
+* /pokedex/1/delete - Delete a pokemon
+* /pokedex/1/location/new/ - Add a new spotted location for a pokemon
+* /pokedex/1/location/1/edit - Edit a spotted location for a pokemon
+* /pokedex/1/location/1/delete - Delete a spotted location for a pokemon
 
 JSON:
-/pokedex/JSON/ - All pokemon in pokedex in JSON format
-/pokedex/1/JSON/ - All spotted locations for a single pokemon ID in JSON format
+* /pokedex/JSON/ - All pokemon in pokedex in JSON format
+* /pokedex/1/JSON/ - All spotted locations for a single pokemon ID in JSON format
 
 ## Built With
 
