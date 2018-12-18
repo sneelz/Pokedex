@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-from flask import Flask, render_template, request, redirect, jsonify, url_for, flash, send_from_directory
+from flask import Flask, render_template, request, redirect
+from flask import jsonify, url_for, flash, send_from_directory
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, User, Pokemon, Spotted
@@ -97,8 +98,8 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(
+            json.dumps('Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -120,7 +121,7 @@ def gconnect():
 
     user_id = getUserID(login_session['email'])
     if not user_id:
-        user_id = createUser(login_session)   
+        user_id = createUser(login_session)
     login_session['user_id'] = user_id
 
     output = ''
@@ -132,34 +133,39 @@ def gconnect():
     return output
 
 
-# Google disconnect - Revoke a current user's token and reset their login_session
+# Google disconnect
+# Revoke a current user's token and reset their login_session
 @app.route('/gdisconnect')
 def gdisconnect():
     access_token = login_session.get('access_token')
     if access_token is None:
         print('Access Token is None')
-        response = make_response(json.dumps('Current user not connected.'), 401)
+        response = make_response(
+            json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     print('In gdisconnect access token is %s', access_token)
     print('User name is: ')
     print(login_session['username'])
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    url = (
+        'https://accounts.google.com/o/oauth2/revoke?token=%s'
+        % login_session['access_token'])
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
     print('result is ')
     print(result)
     if result['status'] == '200':
-        #del login_session['access_token']
-        #del login_session['gplus_id']
-        #del login_session['username']
-        #del login_session['email']
-        #del login_session['picture']
+        # del login_session['access_token']
+        # del login_session['gplus_id']
+        # del login_session['username']
+        # del login_session['email']
+        # del login_session['picture']
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
     else:
-        response = make_response(json.dumps('Failed to revoke token for given user.', 400))
+        response = make_response(
+            json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -173,7 +179,7 @@ def disconnect():
             del login_session['access_token']
             del login_session['gplus_id']
         if login_session['provider'] == 'facebook':
-            #fbdisconnect()
+            # fbdisconnect()
             del login_session['facebook_id']
         del login_session['username']
         del login_session['email']
@@ -189,16 +195,20 @@ def disconnect():
 
 # Helper Functions
 def createUser(login_session):
-    newUser = User(name=login_session['username'], email=login_session['email'], 
-        picture=login_session['picture'])
+    newUser = User(
+                name=login_session['username'],
+                email=login_session['email'],
+                picture=login_session['picture'])
     session.add(newUser)
     session.commit()
     user = session.query(User).filter_by(email=login_session['email']).one()
     return user.id
 
+
 def getUserInfo(user_id):
     user = session.query(User).filter_by(id=user_id).one()
     return user
+
 
 def getUserID(email):
     try:
@@ -206,6 +216,7 @@ def getUserID(email):
         return user.id
     except:
         return None
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -217,6 +228,7 @@ def allowed_file(filename):
 def pokedexJSON():
     pokemons = session.query(Pokemon).all()
     return jsonify(Pokedex=[p.serialize for p in pokemons])
+
 
 @app.route('/pokedex/<int:pokemon_id>/JSON')
 def pokemonJSON(pokemon_id):
@@ -236,16 +248,18 @@ def showPokemon():
     else:
         return render_template('pokedex.html', pokemons=pokemons)
 
+
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
 
+
 # Add a new pokemon
 @app.route('/pokedex/new/', methods=['GET', 'POST'])
 def newPokemon():
     if 'username' not in login_session:
-        return redirect ('/login')
+        return redirect('/login')
     if request.method == 'POST':
         if 'file' not in request.files:
             filename = ''
@@ -279,11 +293,14 @@ def newPokemon():
 @app.route('/pokedex/<int:pokemon_id>/edit/', methods=['GET', 'POST'])
 def editPokemon(pokemon_id):
     if 'username' not in login_session:
-        return redirect ('/login')
+        return redirect('/login')
     editedPokemon = session.query(
         Pokemon).filter_by(id=pokemon_id).one()
     if editedPokemon.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to edit this pokemon. Please create your own pokemon in order to edit.');}</script><body onload='myFunction()'>"
+        return '''<script>function myFunction() {
+            alert('You are not authorized to edit this pokemon.
+            Please create your own pokemon in order to edit.');}
+            </script><body onload='myFunction()'>'''
     if request.method == 'POST':
         if request.form['name']:
             editedPokemon.name = request.form['name']
@@ -319,11 +336,14 @@ def editPokemon(pokemon_id):
 @app.route('/pokedex/<int:pokemon_id>/delete/', methods=['GET', 'POST'])
 def deletePokemon(pokemon_id):
     if 'username' not in login_session:
-        return redirect ('/login')
+        return redirect('/login')
     pokemonToDelete = session.query(
         Pokemon).filter_by(id=pokemon_id).one()
     if pokemonToDelete.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to delete this pokemon. Please create your own pokemon in order to delete.');}</script><body onload='myFunction()'>"
+        return '''<script>function myFunction() {
+            alert('You are not authorized to delete this pokemon.
+            Please create your own pokemon in order to delete.');}
+            </script><body onload='myFunction()'>'''
     if request.method == 'POST':
         session.delete(pokemonToDelete)
         flash('%s successfully deleted.' % pokemonToDelete.name)
@@ -340,25 +360,33 @@ def showSpotted(pokemon_id):
     creator = getUserInfo(pokemon.user_id)
     spotted = session.query(Spotted).filter_by(
         pokemon_id=pokemon_id).all()
-    if 'username' not in login_session or creator.id != login_session['user_id']:
-        return render_template('publicpokemon.html', spotted=spotted, pokemon=pokemon, creator=creator)
+    if ('username' not in login_session or
+            creator.id != login_session['user_id']):
+        return render_template(
+            'publicpokemon.html',
+            spotted=spotted, pokemon=pokemon, creator=creator)
     else:
-        return render_template('pokemon.html', spotted=spotted, pokemon=pokemon, creator=creator)
+        return render_template(
+            'pokemon.html',
+            spotted=spotted, pokemon=pokemon, creator=creator)
 
 
 # Add a new spotted location
 @app.route('/pokedex/<int:pokemon_id>/location/new/', methods=['GET', 'POST'])
 def newSpot(pokemon_id):
     if 'username' not in login_session:
-        return redirect ('/login')
+        return redirect('/login')
     pokemon = session.query(Pokemon).filter_by(id=pokemon_id).one()
     if login_session['user_id'] != pokemon.user_id:
-        return "<script>function myFunction() {alert('You are not authorized to add spots for this pokemon. Please create your own pokemon in order to add spots.');}</script><body onload='myFunction()'>"
+        return '''<script>function myFunction() {
+            alert('You are not authorized to add spots for this pokemon.
+            Please create your own pokemon in order to add spots.');}
+            </script><body onload='myFunction()'>'''
     if request.method == 'POST':
         newSpot = Spotted(
-            location=request.form['location'], 
-            date=request.form['date'], 
-            notes=request.form['notes'], 
+            location=request.form['location'],
+            date=request.form['date'],
+            notes=request.form['notes'],
             pokemon_id=pokemon_id
         )
         session.add(newSpot)
@@ -370,14 +398,19 @@ def newSpot(pokemon_id):
 
 
 # Edit a spotted location
-@app.route('/pokedex/<int:pokemon_id>/location/<int:spotted_id>/edit', methods=['GET', 'POST'])
+@app.route(
+    '/pokedex/<int:pokemon_id>/location/<int:spotted_id>/edit',
+    methods=['GET', 'POST'])
 def editSpot(pokemon_id, spotted_id):
     if 'username' not in login_session:
-        return redirect ('/login')
+        return redirect('/login')
     editedSpot = session.query(Spotted).filter_by(id=spotted_id).one()
     pokemon = session.query(Pokemon).filter_by(id=pokemon_id).one()
     if login_session['user_id'] != pokemon.user_id:
-        return "<script>function myFunction() {alert('You are not authorized to edit spots for this pokemon. Please create your own pokemon in order to edit spots.');}</script><body onload='myFunction()'>"
+        return '''<script>function myFunction() {
+            alert('You are not authorized to edit spots for this pokemon.
+            Please create your own pokemon in order to edit spots.');}
+            </script><body onload='myFunction()'>'''
     if request.method == 'POST':
         if request.form['location']:
             editedSpot.location = request.form['location']
@@ -390,26 +423,34 @@ def editSpot(pokemon_id, spotted_id):
         flash('%s successfully edited.' % (editedSpot.location))
         return redirect(url_for('showSpotted', pokemon_id=pokemon_id))
     else:
-        return render_template('editspot.html', pokemon_id=pokemon_id, spotted_id=spotted_id, spot=editedSpot)
+        return render_template(
+            'editspot.html',
+            pokemon_id=pokemon_id, spotted_id=spotted_id, spot=editedSpot)
 
 
 # Delete a spotted location
-@app.route('/pokedex/<int:pokemon_id>/location/<int:spotted_id>/delete', methods=['GET', 'POST'])
+@app.route(
+    '/pokedex/<int:pokemon_id>/location/<int:spotted_id>/delete',
+    methods=['GET', 'POST'])
 def deleteSpot(pokemon_id, spotted_id):
     if 'username' not in login_session:
-        return redirect ('/login')
+        return redirect('/login')
     pokemon = session.query(Pokemon).filter_by(id=pokemon_id).one()
     spotToDelete = session.query(Spotted).filter_by(id=spotted_id).one()
     if login_session['user_id'] != pokemon.user_id:
-        return "<script>function myFunction() {alert('You are not authorized to delete spots for this pokemon. Please create your own pokemon in order to delete spots.');}</script><body onload='myFunction()'>"
+        return '''<script>function myFunction() {
+            alert('You are not authorized to delete spots for this pokemon.
+            Please create your own pokemon in order to delete spots.');}
+            </script><body onload='myFunction()'>'''
     if request.method == 'POST':
         session.delete(spotToDelete)
         session.commit()
         flash('%s successfully deleted.' % (spotToDelete.location))
         return redirect(url_for('showSpotted', pokemon_id=pokemon_id))
     else:
-        return render_template('deletespot.html', pokemon_id=pokemon_id, spotted_id=spotted_id, spot=spotToDelete)
-
+        return render_template(
+            'deletespot.html',
+            pokemon_id=pokemon_id, spotted_id=spotted_id, spot=spotToDelete)
 
 
 if __name__ == '__main__':
