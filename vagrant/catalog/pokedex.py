@@ -14,6 +14,7 @@ import httplib2
 import json
 from flask import make_response
 import requests
+from datetime import datetime
 
 import os
 from werkzeug.utils import secure_filename
@@ -270,7 +271,7 @@ def newPokemon():
                 filename = ''
                 print('No selected file')
             if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
+                filename = str(datetime.now().strftime('%Y_%m_%d_%H_%M_%S')) + '_' + secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         newPokemon = Pokemon(
             name=request.form['name'],
@@ -315,7 +316,7 @@ def editPokemon(pokemon_id):
                 editedPokemon.picture = editedPokemon.picture
                 print("No change to picture")
             if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
+                filename = str(datetime.now().strftime('%Y_%m_%d_%H_%M_%S')) + '_' + secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 editedPokemon.picture = filename
         if request.form['type1']:
@@ -329,7 +330,7 @@ def editPokemon(pokemon_id):
         flash('%s successfully edited.' % editedPokemon.name)
         return redirect(url_for('showPokemon'))
     else:
-        return render_template('editPokemon.html', pokemon=editedPokemon)
+        return render_template('editpokemon.html', pokemon=editedPokemon)
 
 
 # Delete a pokemon
@@ -350,7 +351,7 @@ def deletePokemon(pokemon_id):
         session.commit()
         return redirect(url_for('showPokemon', pokemon_id=pokemon_id))
     else:
-        return render_template('deletePokemon.html', pokemon=pokemonToDelete)
+        return render_template('deletepokemon.html', pokemon=pokemonToDelete)
 
 
 # View a single pokemon
