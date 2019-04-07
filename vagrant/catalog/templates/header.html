@@ -11,8 +11,8 @@
 			{%if 'username' not in session %}
 				<a class="nav-item nav-link" href="{{url_for('showLogin')}}">Login</a>
 			{% else %}
-				<a class="nav-item nav-link" href="{{url_for('disconnect')}}">Logout</a>
+				<a class="nav-item nav-link" onclick="signOut();" href="{{url_for('disconnect')}}">Logout</a>
 			{% endif %}
 	  </div>
 	</div>
-  </nav>
+</nav>
