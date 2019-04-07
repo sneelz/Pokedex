@@ -3,7 +3,19 @@
 <head>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-  <script src="//apis.google.com/js/platform.js?onload=start"> </script>
+  <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+
+  <script>
+    function start() {
+      gapi.load('auth2', function() {
+        auth2 = gapi.auth2.init({
+          client_id: '350832741883-i921ae6q6kosbav5dan68diitfjtjvfi.apps.googleusercontent.com',
+        });
+      });
+    }
+  </script>
+
+  <meta name="google-signin-client_id" content="350832741883-i921ae6q6kosbav5dan68diitfjtjvfi.apps.googleusercontent.com">
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
@@ -23,17 +35,15 @@
             <img src="/static/pokeball.svg" class="pkdx-pokeball"/>
             <h3>Log into Pokedex with Google</h3>
             <br/>
-            <div id="signinButton">
-              <span class="g-signin"
-                data-scope="openid email"
-                data-clientid="350832741883-i921ae6q6kosbav5dan68diitfjtjvfi.apps.googleusercontent.com"
-                data-redirecturi="postmessage"
-                data-accesstype="offline"
-                data-cookiepolicy="single_host_origin"
-                data-callback="signInCallback"
-                data-approvalprompt="force">
-              </span>
-            </div>
+            
+            <div id="signinButton" class="g-signin2" style="display: inline-block;"></div>
+
+            <script>
+              $('#signinButton').click(function() {
+                // signInCallback defined in step 6.
+                auth2.grantOfflineAccess().then(signInCallback);
+              });
+            </script>
 
             <div id="result"></div>
         </div>
@@ -44,35 +54,40 @@
   {% include "footer.html" %}
 
   <script>
-      function signInCallback(authResult) {
-        if (authResult['code']) {
+    function signInCallback(authResult) {
+      if (authResult['code']) {
 
-          // Hide the sign-in button now that the user is authorized
-          $('#signinButton').attr('style', 'display: none');
+        // Hide the sign-in button now that the user is authorized, for example:
+        $('#signinButton').attr('style', 'display: none');
 
-          // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
-          $.ajax({
-            type: 'POST',
-            url: '/gconnect?state={{STATE}}',
-            processData: false,
-            data: authResult['code'],
-            contentType: 'application/octet-stream; charset=utf-8',
-            success: function(result) {
-              // Handle or verify the server response if necessary.
-              if (result) {
+        // Send the code to the server
+        $.ajax({
+          type: 'POST',
+          url: '/gconnect?state={{STATE}}',
+          // Always include an `X-Requested-With` header in every AJAX request,
+          // to protect against CSRF attacks.
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          contentType: 'application/octet-stream; charset=utf-8',
+          success: function(result) {
+            console.log('success');
+            if (result) {
                 $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
               setTimeout(function() {
                 window.location.href = "/pokedex";
               }, 4000);                        
-            } else if (authResult['error']) {
-          console.log('There was an error: ' + authResult['error']);
-          } 
-          else {
-              $('#result').html('Failed to make a server-side call. Check your configuration and console.');
-            }
-          }   
-        }); 
-      } 
+            } 
+            else if (authResult['error']) {
+              console.log('There was an error: ' + authResult['error']);
+            } 
+          },
+          processData: false,
+          data: authResult['code']
+        });
+      } else {
+        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+      }
     }
   </script>
 
